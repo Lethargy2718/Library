@@ -19,7 +19,7 @@
     --font-size: clamp(0.55rem, 0.6rem + 0.2vw, 1.2rem);
 }
 
-:root.light {
+/* :root.light {
     --clr-prim: #bfdbfe;
     --clr-sec: #dbeafe;
     --clr-other: #2563eb;
@@ -28,7 +28,7 @@
     --clr-side: #cbd5e1;
     --filter: invert(11%) sepia(49%) saturate(2532%) hue-rotate(211deg) brightness(94%) contrast(94%);
     --box-shadow: 5px 5px 4px 4px rgb(2, 27, 70, 0.4);
-}
+} */
 
 *, *::before, *::after {
     padding: 0;
@@ -248,7 +248,7 @@ input:invalid {
     content: '';
     z-index: -1;
     top: 0%;
-    left: -0.9%;
+    left: -1.5%;
     height: 100%;
     width: 100%;
     background-color: var(--clr-titles);
