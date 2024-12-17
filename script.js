@@ -124,7 +124,7 @@ function createCard(book) {
         <h4> "${book.title}" </h4>
         <div class="row2">
             ${book.author ? `<p>Author: <i>${book.author}</italic></i>` : ""}
-            ${book.pages ? (book.completedPages ? `<p>Completed Pages: ${book.completedPages}/${book.pages}</p>` : `<p>Pages: ${book.pages}</p>`) : ""}
+            ${book.pages ? (book.completedPages ? `<p id="pages-text">Completed Pages: ${book.completedPages}/${book.pages}</p>` : `<p id="pages-text">Pages: ${book.pages}</p>`) : ""}
         <div>
     ` 
 
@@ -142,22 +142,45 @@ function createCard(book) {
 
 function toggleRead(event) {
     const button = event.target
+    const pagesText = cardFromButton(button).querySelector("#pages-text")
+    const book = bookFromButton(button)
+
     if (button.textContent === "Read") {
         button.textContent = "Not read"
-        
+        if (pagesText) {
+            pagesText.textContent = `Completed Pages: 0/${book.pages}`
+            book.completedPages = 0
+        }
     }
     else {
         button.textContent = "Read"
+        if (pagesText) {
+            pagesText.textContent = `Completed Pages: ${book.pages}/${book.pages}`
+            book.completedPages = book.pages
+        }
     }
 }
 
-function editBook() {
+function editBook(event) {
     alert("Sorry, haven't implemented yet :p")
+    
 }
 
 function deleteBook(event) {
-    let title = event.target.parentElement.parentElement.getAttribute("data-info")
+    let title = titleFromButton(event.target)
     myLibrary.books = myLibrary.books.filter(book => book.title !== title)
     console.log(myLibrary.books)
     myLibrary.displayBooks()
+}
+
+function titleFromButton(btn) {
+    return btn.parentElement.parentElement.getAttribute("data-info")
+}
+
+function bookFromButton(btn) {
+    return myLibrary.books.find(book => book.title === titleFromButton(btn))
+}
+
+function cardFromButton(btn) {
+    return btn.parentElement.parentElement
 }

@@ -89,8 +89,7 @@ button:hover {
         font-size: 1.3em;
         height: 100%;
         width: 10em;
-        border-radius: 0;
-        
+        border-radius: 0; 
     }
 }
 
@@ -143,7 +142,6 @@ button:hover {
     opacity: 10;
   }
   
-
 dialog, form, label, input, legend, .form-buttons *, dialog h1 {
     color: var(--clr-text);
 }
@@ -192,7 +190,6 @@ form {
         height: auto;
         accent-color: var(--clr-prim)
     }
-
 }
 
 [type="text"],[type="number"] {
@@ -283,8 +280,6 @@ input:invalid {
     & button {
         width: 200px;
         padding: 0.4em;
-
-        
     }    
 
     &:hover {
