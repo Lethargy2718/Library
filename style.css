@@ -276,7 +276,7 @@ input:invalid {
         gap: var(--gap-main);
     }
 
-    & h4 {
+    & * {
         word-break: break-all;
     }
 
