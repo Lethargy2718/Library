@@ -14,31 +14,55 @@ const completedPagesEl = document.querySelector("#completed-pages")
 
 const bookGrid = document.querySelector(".books")
 
-let titles = []
+class Book {
+    constructor(title, author = "Unknown", read, pages, completedPages) {
+        this.title = title
+        this.author = author
+        this.read = read
+        this.pages = pages
+        this.completedPages = completedPages
+    }
 
-function Book(title, author = "Unknown", read, pages, completedPages) {
-  this.title = title
-  this.author = author
-  this.read = read
-  this.pages = pages
-  this.completedPages = completedPages
-}
-
-function clearGrid() {
-    const children = Array.prototype.slice.call(bookGrid.children)
-    children.forEach(card => {card.remove()})
-}
-
-const myLibrary = {
-    books: [],
-    displayBooks: function() {
-        clearGrid()
-        this.books.forEach(book => {bookGrid.appendChild(createCard(book))})
+    toggleRead() {
+        this.read = !this.read
+        this.completedPages = this.read ? (this.pages ? +this.pages : null) : 0
     }
 }
 
+class LibraryClass {
+    constructor(starterBooks = [], bookGrid) {
+        this.books = starterBooks
+        this.grid = bookGrid
+        this.displayBooks(this.grid)
+    }
+
+    displayBooks() {
+        clearGrid()
+        this.books.forEach(book => {this.grid.appendChild(createCard(book))})
+    }
+
+    addBook(book) {
+        this.books.push(book)
+    }
+
+    removeBook(title) {
+        this.books = this.books.filter(book => book.title !== title)
+    }
+
+    findBook(title) {
+        return this.books.find(book => book.title === title)
+    }
+
+    getTitles() {
+        return this.books.map(book => book.title)
+    }
+}
+
+const SampleBook = new Book("Sample Book", "Sample Author", true, 100, 100)
+
+const Library = new LibraryClass([SampleBook], bookGrid)
+
 addButton.addEventListener("click", () => {
-    titles = myLibrary.books.map(value => value.title)
     dialog.showModal()
     dialog.classList.add("show")
 })
@@ -49,7 +73,7 @@ closeButton.addEventListener("click", () => {
 })
 
 titleEl.addEventListener("input", () => {
-    if (titles.includes(titleEl.value)) {
+    if (Library.findBook(titleEl.value)) {
         console.log("Already in library")
         titleEl.setCustomValidity("This book is already in your library!")
     } else {
@@ -94,8 +118,8 @@ submitButton.addEventListener("click", (event) => {
     event.preventDefault()
     const book = new Book(titleEl.value, authorEl.value, readEl.checked, pagesEl.value, completedPagesEl.value)
     form.querySelectorAll("input").forEach(element => {element.value = null})
-    myLibrary.books.push(book)
-    myLibrary.displayBooks()
+    Library.addBook(book)
+    Library.displayBooks()
     dialog.close()
 })
 
@@ -144,33 +168,29 @@ function toggleRead(event) {
     const button = event.target
     const pagesText = cardFromButton(button).querySelector("#pages-text")
     const book = bookFromButton(button)
+    book.toggleRead()
 
     if (button.textContent === "Read") {
         button.textContent = "Not read"
         if (pagesText) {
             pagesText.textContent = `Completed Pages: 0/${book.pages}`
-            book.completedPages = 0
         }
     }
     else {
         button.textContent = "Read"
         if (pagesText) {
             pagesText.textContent = `Completed Pages: ${book.pages}/${book.pages}`
-            book.completedPages = book.pages
         }
     }
 }
 
 function editBook(event) {
     alert("Sorry, haven't implemented yet :p")
-    
 }
 
 function deleteBook(event) {
-    let title = titleFromButton(event.target)
-    myLibrary.books = myLibrary.books.filter(book => book.title !== title)
-    console.log(myLibrary.books)
-    myLibrary.displayBooks()
+    Library.removeBook(titleFromButton(event.target))
+    Library.displayBooks()
 }
 
 function titleFromButton(btn) {
@@ -178,9 +198,14 @@ function titleFromButton(btn) {
 }
 
 function bookFromButton(btn) {
-    return myLibrary.books.find(book => book.title === titleFromButton(btn))
+    return Library.findBook(titleFromButton(btn))
 }
 
 function cardFromButton(btn) {
     return btn.parentElement.parentElement
+}
+
+function clearGrid() {
+    const children = Array.prototype.slice.call(bookGrid.children)
+    children.forEach(card => {card.remove()})
 }
